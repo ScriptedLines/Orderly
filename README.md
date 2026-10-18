@@ -2,6 +2,24 @@
 
 AI-powered e-commerce customer support agent. Customers sign in, select an order, and chat with a LangChain agent that can look up orders, check return eligibility, cancel orders, answer policy questions via RAG, and escalate to a human.
 
+## Screenshots
+
+### Sign in
+
+![Sign-in screen](assets/sign-in-up.png)
+
+### Start a new thread
+
+Every conversation is anchored to an order in the customer's account.
+
+![New thread modal](assets/new-thread.png)
+
+### Agentic chat
+
+Streamed answers with live tool calls (order database lookups, policy RAG) and per-thread history.
+
+![Chat interface](assets/chat.png)
+
 ## Features
 
 - Agentic chat with real-time token streaming (SSE)
@@ -185,6 +203,7 @@ Order-bot/
 ├── seed_data.py       # demo products, orders, items, shipments
 ├── ingest_docs.py     # CLI ingestion for docs/
 ├── docs/              # policy documents (md, pdf, csv, xlsx)
+├── assets/            # screenshots used by this README
 ├── routes/
 │   ├── auth.py        # service-key auth proxy
 │   ├── chat.py        # threads, SSE agent streaming, orders
