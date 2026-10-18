@@ -1,0 +1,2820 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Orderly — enterprise order tracking and policy intelligence console." />
+  <title>Orderly — Enterprise Order &amp; Policy Intelligence Hub</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='6' fill='%2309090b'/><path d='M21 8l-9-5-9 5v8l9 5 9-5V8z' fill='none' stroke='white' stroke-width='1.4' stroke-linejoin='round'/><path d='M3 8l9 5 9-5M12 13v8' fill='none' stroke='white' stroke-width='1.4' stroke-linejoin='round'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============ Design Tokens ============ */
+    :root[data-theme="light"] {
+      --bg-base: #ffffff;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f4f4f5;
+      --bg-subtle: #fafafa;
+      --bg-card: #ffffff;
+      --border-subtle: #e4e4e7;
+      --border-strong: #d4d4d8;
+      --text-main: #09090b;
+      --text-muted: #52525b;
+      --text-soft: #a1a1aa;
+      --primary: #09090b;
+      --primary-hover: #26262b;
+      --primary-fg: #ffffff;
+      --primary-subtle: #f4f4f5;
+      --primary-text: #18181b;
+      --accent: #4f46e5;
+      --accent-soft: #eef2ff;
+      --sidebar-bg: #fafafa;
+      --msg-user-bg: #09090b;
+      --msg-user-text: #fafafa;
+      --msg-bot-bg: #ffffff;
+      --msg-bot-border: #e4e4e7;
+      --code-bg: #f4f4f5;
+      --tool-bg: #fafafa;
+      --tool-border: #e4e4e7;
+      --tag-bg: #f4f4f5;
+      --tag-text: #52525b;
+      --danger-text: #dc2626;
+      --danger-border: rgba(220, 38, 38, 0.28);
+      --warning-bg: #fffbeb;
+      --warning-text: #b45309;
+      --warning-border: rgba(217, 119, 6, 0.28);
+      --ok: #059669;
+      --focus-ring: rgba(79, 70, 229, 0.16);
+      --shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.05);
+      --shadow-md: 0 4px 14px rgba(9, 9, 11, 0.08);
+      --shadow-lg: 0 24px 48px -12px rgba(9, 9, 11, 0.22);
+    }
+
+    :root[data-theme="dark"] {
+      --bg-base: #050506;
+      --bg-surface: #0a0a0c;
+      --bg-surface-elevated: #131316;
+      --bg-subtle: #0f0f12;
+      --bg-card: #0b0b0e;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-strong: rgba(255, 255, 255, 0.15);
+      --text-main: #fafafa;
+      --text-muted: #a1a1aa;
+      --text-soft: #6b6b74;
+      --primary: #fafafa;
+      --primary-hover: #d4d4d8;
+      --primary-fg: #09090b;
+      --primary-subtle: rgba(255, 255, 255, 0.07);
+      --primary-text: #e4e4e7;
+      --accent: #818cf8;
+      --accent-soft: rgba(129, 140, 248, 0.12);
+      --sidebar-bg: #070709;
+      --msg-user-bg: #1e1e23;
+      --msg-user-text: #fafafa;
+      --msg-bot-bg: #0d0d10;
+      --msg-bot-border: rgba(255, 255, 255, 0.08);
+      --code-bg: #131316;
+      --tool-bg: #0d0d10;
+      --tool-border: rgba(255, 255, 255, 0.08);
+      --tag-bg: rgba(255, 255, 255, 0.06);
+      --tag-text: #a1a1aa;
+      --danger-text: #f87171;
+      --danger-border: rgba(248, 113, 113, 0.3);
+      --warning-bg: rgba(245, 158, 11, 0.09);
+      --warning-text: #fbbf24;
+      --warning-border: rgba(245, 158, 11, 0.3);
+      --ok: #34d399;
+      --focus-ring: rgba(129, 140, 248, 0.2);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.8);
+    }
+
+    /* ============ Base ============ */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    ::selection {
+      background: var(--accent-soft);
+      color: var(--text-main);
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(125, 125, 135, 0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(125, 125, 135, 0.5); }
+
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ============ App Header ============ */
+    header.app-header {
+      height: 60px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 16px;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background-color: var(--text-main);
+      color: var(--bg-base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .brand-badge {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      padding: 2px 6px;
+      border-radius: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 10px;
+      border-radius: 99px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.74rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--text-soft);
+      flex-shrink: 0;
+      transition: background-color 0.2s ease;
+    }
+
+    .status-dot.online { background-color: var(--ok); }
+    .status-dot.offline { background-color: var(--danger-text); }
+
+    .order-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 10px;
+      border-radius: 99px;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.74rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+      max-width: 220px;
+    }
+
+    .order-badge-pill svg {
+      color: var(--text-soft);
+      flex-shrink: 0;
+    }
+
+    .order-badge-pill span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      background-color: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+      flex-shrink: 0;
+      font-family: inherit;
+    }
+
+    .btn-icon:hover {
+      background-color: var(--bg-subtle);
+      border-color: var(--border-subtle);
+      color: var(--text-main);
+    }
+
+    #themeIcon { display: inline-flex; }
+
+    /* ============ Layout ============ */
+    .app-main {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ============ Sidebar ============ */
+    aside.app-sidebar {
+      width: 300px;
+      background-color: var(--sidebar-bg);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      padding: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .btn-new-thread {
+      width: 100%;
+      padding: 9px 14px;
+      background-color: var(--primary);
+      color: var(--primary-fg);
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.82rem;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background-color 0.15s, opacity 0.15s;
+    }
+
+    .btn-new-thread:hover { background-color: var(--primary-hover); }
+
+    .sidebar-section-title {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      color: var(--text-soft);
+      padding: 14px 16px 6px 16px;
+    }
+
+    .threads-scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .thread-item {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: background-color 0.12s, border-color 0.12s;
+    }
+
+    .thread-item:hover { background-color: var(--bg-subtle); }
+
+    .thread-item.active {
+      background-color: var(--bg-surface);
+      border-color: var(--border-strong);
+      box-shadow: inset 2px 0 0 var(--accent), var(--shadow-sm);
+    }
+
+    .thread-item-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .thread-order-tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-main);
+      background-color: var(--tag-bg);
+      border: 1px solid var(--border-subtle);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .thread-time {
+      font-size: 0.66rem;
+      color: var(--text-soft);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .thread-preview {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .thread-status-badge {
+      font-size: 0.64rem;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 5px;
+      display: inline-block;
+      width: fit-content;
+      margin-top: 2px;
+      letter-spacing: 0.02em;
+    }
+
+    .thread-status-badge.escalated {
+      background-color: var(--warning-bg);
+      color: var(--warning-text);
+      border: 1px solid var(--warning-border);
+    }
+
+    .sidebar-docs-section {
+      border-top: 1px solid var(--border-subtle);
+      padding: 0 10px 12px 10px;
+    }
+
+    .docs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .doc-pill {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      padding: 7px 10px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      transition: background-color 0.12s, color 0.12s;
+    }
+
+    .doc-pill:hover {
+      background-color: var(--bg-subtle);
+      color: var(--text-main);
+    }
+
+    .doc-pill svg {
+      color: var(--text-soft);
+      flex-shrink: 0;
+      transition: color 0.12s;
+    }
+
+    .doc-pill:hover svg { color: var(--text-muted); }
+
+    /* ============ Chat Workspace ============ */
+    main.chat-workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--bg-base);
+      min-width: 0;
+    }
+
+    .chat-messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      scroll-behavior: smooth;
+    }
+
+    /* ============ Messages ============ */
+    .msg-wrapper {
+      display: flex;
+      gap: 12px;
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+      animation: fadeIn 0.22s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-wrapper.user { flex-direction: row-reverse; }
+
+    .msg-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .msg-avatar.bot {
+      background-color: var(--text-main);
+      color: var(--bg-base);
+    }
+
+    .msg-avatar.user {
+      background-color: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    .msg-content-box {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .msg-wrapper.user .msg-content-box {
+      flex: 0 1 auto;
+      align-items: flex-end;
+      max-width: 78%;
+    }
+
+    .msg-bubble {
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      max-width: 100%;
+    }
+
+    .msg-wrapper.user .msg-bubble {
+      background-color: var(--msg-user-bg);
+      color: var(--msg-user-text);
+      border: 1px solid transparent;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-wrapper.bot .msg-bubble {
+      background-color: var(--msg-bot-bg);
+      color: var(--text-main);
+      border: 1px solid var(--msg-bot-border);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg-meta {
+      font-size: 0.67rem;
+      color: var(--text-soft);
+      padding: 0 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .msg-error {
+      color: var(--danger-text);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .tool-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    /* ============ Tool Execution Card ============ */
+    .tool-execution-card {
+      border: 1px solid var(--tool-border);
+      border-radius: 10px;
+      background-color: var(--tool-bg);
+      overflow: hidden;
+      font-size: 0.8rem;
+    }
+
+    .tool-header {
+      padding: 9px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.12s;
+    }
+
+    .tool-header:hover { background-color: var(--bg-subtle); }
+
+    .tool-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-main);
+      font-weight: 500;
+      font-size: 0.78rem;
+      min-width: 0;
+    }
+
+    .tool-badge > span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tool-spinner {
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid var(--border-strong);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .tool-check {
+      width: 13px;
+      height: 13px;
+      color: var(--ok);
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .tool-status-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-soft);
+      flex-shrink: 0;
+    }
+
+    .tool-status {
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    .tool-status.done { color: var(--ok); }
+
+    .tool-chevron {
+      transition: transform 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .tool-header.open .tool-chevron { transform: rotate(180deg); }
+
+    .tool-details {
+      display: none;
+      padding: 10px 12px;
+      border-top: 1px solid var(--tool-border);
+      background-color: var(--code-bg);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-height: 220px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .tool-details.open { display: block; }
+
+    /* ============ Escalation Banner ============ */
+    .escalation-banner {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border: 1px solid var(--warning-border);
+      border-radius: 12px;
+      background-color: var(--warning-bg);
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .escalation-icon {
+      color: var(--warning-text);
+      display: flex;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .escalation-body h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 3px;
+      letter-spacing: -0.01em;
+    }
+
+    .escalation-body p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* ============ Empty State ============ */
+    .chat-empty-state {
+      max-width: 640px;
+      margin: auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 40px 20px;
+    }
+
+    .empty-hero-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+      margin-bottom: 2px;
+    }
+
+    .empty-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    .empty-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      max-width: 470px;
+      line-height: 1.65;
+    }
+
+    .suggestion-chips {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 8px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .chip-btn {
+      padding: 12px 14px;
+      border-radius: 10px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s, background-color 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chip-btn:hover {
+      border-color: var(--border-strong);
+      background-color: var(--bg-subtle);
+    }
+
+    .chip-btn svg {
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ============ Composer ============ */
+    .chat-input-area {
+      padding: 16px 24px 20px 24px;
+      background-color: var(--bg-base);
+      border-top: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .input-form-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .input-box-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 8px 8px 8px 14px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .input-box-container:focus-within {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    textarea#userQueryInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text-main);
+      max-height: 180px;
+      min-height: 24px;
+      padding: 7px 0;
+    }
+
+    textarea#userQueryInput::placeholder { color: var(--text-soft); }
+
+    .btn-send {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background-color: var(--primary);
+      color: var(--primary-fg);
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.15s, opacity 0.15s;
+      flex-shrink: 0;
+    }
+
+    .btn-send:hover { background-color: var(--primary-hover); }
+
+    .btn-send:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .input-hints {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      padding: 0 2px;
+    }
+
+    .input-hints kbd {
+      font-family: inherit;
+      font-size: 0.66rem;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      border-bottom-width: 2px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    /* ============ System Notes ============ */
+    .panel-note {
+      padding: 20px 12px;
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      text-align: center;
+      line-height: 1.65;
+    }
+
+    .panel-note-inline {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .chat-loading {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-soft);
+      font-size: 0.85rem;
+    }
+
+    .chat-error {
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--danger-text);
+      font-size: 0.85rem;
+    }
+
+    /* ============ Modal System ============ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      animation: modalFadeIn 0.18s ease forwards;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+
+    .modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+
+    .modal-body p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .modal-body code,
+    .form-help code {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-subtle);
+      padding: 1px 5px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8em;
+    }
+
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      background-color: var(--bg-subtle);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .form-help {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      line-height: 1.55;
+    }
+
+    .form-input {
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .form-input::placeholder { color: var(--text-soft); }
+
+    .form-input:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .btn-secondary {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.15s, border-color 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--bg-subtle);
+      border-color: var(--border-strong);
+    }
+
+    .btn-primary {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background-color: var(--primary);
+      color: var(--primary-fg);
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.15s, opacity 0.15s;
+    }
+
+    .btn-primary:hover { background-color: var(--primary-hover); }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ============ Order Select Chips ============ */
+    .order-select-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background-color: var(--bg-base);
+      font-size: 0.78rem;
+      font-family: inherit;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: border-color 0.15s, background-color 0.15s;
+    }
+
+    .order-select-chip:hover {
+      border-color: var(--border-strong);
+      background-color: var(--bg-subtle);
+    }
+
+    .order-select-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+    }
+
+    .order-select-status {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      text-transform: capitalize;
+    }
+
+    /* ============ Markdown In Messages ============ */
+    .msg-bubble table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: 0.82rem;
+    }
+
+    .msg-bubble th,
+    .msg-bubble td {
+      border: 1px solid var(--border-subtle);
+      padding: 7px 10px;
+      text-align: left;
+    }
+
+    .msg-bubble th {
+      background-color: var(--bg-subtle);
+      font-weight: 600;
+    }
+
+    .msg-bubble ul,
+    .msg-bubble ol {
+      margin: 8px 0 8px 20px;
+    }
+
+    .msg-bubble li { margin: 2px 0; }
+
+    .msg-bubble code {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-subtle);
+      padding: 1px 5px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82em;
+    }
+
+    .msg-bubble pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-subtle);
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 8px 0;
+    }
+
+    .msg-bubble pre code {
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .msg-bubble strong { font-weight: 600; }
+
+    .msg-bubble a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ============ Typing Cursor ============ */
+    .typing-cursor::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      height: 1.05em;
+      margin-left: 3px;
+      vertical-align: text-bottom;
+      background-color: var(--text-soft);
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ============ Toasts ============ */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 400;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      background-color: var(--text-main);
+      color: var(--bg-base);
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      max-width: 360px;
+      animation: toastIn 0.2s ease;
+    }
+
+    .toast.error { background-color: var(--danger-text); color: #ffffff; }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============ Auth Screen ============ */
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background-color: var(--bg-base);
+      display: flex;
+      overflow-y: auto;
+      padding: 24px 16px;
+    }
+
+    body.authed .auth-screen { display: none; }
+
+    body:not(.authed) header.app-header,
+    body:not(.authed) .app-main { display: none; }
+
+    .auth-card {
+      margin: auto;
+      width: 100%;
+      max-width: 400px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      padding: 28px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .auth-brand .brand-logo-icon { width: 38px; height: 38px; border-radius: 10px; }
+
+    .auth-brand-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .auth-subtitle {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-top: -8px;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .auth-tab {
+      padding: 8px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+    }
+
+    .auth-tab.active {
+      background-color: var(--bg-surface);
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .auth-error {
+      font-size: 0.78rem;
+      line-height: 1.55;
+      color: var(--danger-text);
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--danger-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      word-break: break-word;
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
+
+    .auth-footnote {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    .auth-verify {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .auth-verify-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background-color: var(--accent-soft);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-verify-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+
+    .auth-verify-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      word-break: break-word;
+    }
+
+    .auth-back-link {
+      background: transparent;
+      border: none;
+      color: var(--text-soft);
+      font-family: inherit;
+      font-size: 0.76rem;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      padding: 4px;
+    }
+
+    .auth-back-link:hover { color: var(--text-main); }
+
+    /* ============ Responsive ============ */
+    .mobile-menu-btn { display: none; }
+
+    @media (max-width: 860px) {
+      .mobile-menu-btn { display: inline-flex; }
+
+      aside.app-sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        box-shadow: var(--shadow-lg);
+      }
+
+      aside.app-sidebar.open { transform: translateX(0); }
+
+      .header-center { display: none; }
+
+      .chat-messages-container { padding: 24px 16px; }
+      .chat-input-area { padding: 12px 16px 16px 16px; }
+      .msg-wrapper.user .msg-content-box { max-width: 88%; }
+      .toast-container { left: 16px; right: 16px; bottom: 16px; align-items: stretch; }
+      .toast { max-width: none; }
+    }
+
+  </style>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("orderbot_theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+<!-- Auth Gate: Sign In / Create Account -->
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="brand-logo-icon">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>
+        </div>
+        <div class="auth-brand-title">
+          Orderly
+          <span class="brand-badge">Enterprise</span>
+        </div>
+      </div>
+
+      <p class="auth-subtitle">Sign in to manage orders and support conversations.</p>
+
+      <div class="auth-tabs" id="authTabs">
+        <button class="auth-tab active" type="button" data-mode="signin">Sign In</button>
+        <button class="auth-tab" type="button" data-mode="signup">Create Account</button>
+      </div>
+
+      <form class="auth-form" id="authForm" novalidate>
+        <div class="form-group" id="authNameGroup" style="display:none;">
+          <label class="form-label" for="authNameInput">Full Name</label>
+          <input type="text" class="form-input" id="authNameInput" placeholder="Jane Doe" autocomplete="name" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="authEmailInput">Email</label>
+          <input type="email" class="form-input" id="authEmailInput" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="authPasswordInput">Password</label>
+          <input type="password" class="form-input" id="authPasswordInput" placeholder="At least 6 characters" autocomplete="current-password" required minlength="6" />
+        </div>
+
+        <div class="auth-error" id="authError" style="display:none;"></div>
+
+        <button type="submit" class="btn-primary auth-submit" id="authSubmitBtn">Sign In</button>
+      </form>
+
+      <div class="auth-verify" id="authVerifyPanel" style="display:none;">
+        <div class="auth-verify-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+        </div>
+        <div class="auth-verify-title">Verify your email</div>
+        <p class="auth-verify-text" id="authVerifyText"></p>
+        <button type="button" class="btn-secondary" id="authResendBtn">Resend verification email</button>
+        <button type="button" class="auth-back-link" id="authBackToSigninBtn">Back to sign in</button>
+      </div>
+
+      <div class="auth-footnote" id="authFooterNote">Sign in to access your orders and conversations.</div>
+    </div>
+  </div>
+
+<!-- Top App Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <button class="btn-icon mobile-menu-btn" id="sidebarToggleBtn" aria-label="Toggle sidebar" title="Toggle sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+      <div class="brand-logo-icon">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>
+      </div>
+      <div class="brand-title">
+        Orderly
+        <span class="brand-badge">Enterprise</span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="status-pill" id="healthStatusPill">
+        <span class="status-dot" id="healthStatusDot"></span>
+        <span id="healthStatusText">Checking API...</span>
+      </div>
+
+      <div class="order-badge-pill" id="activeOrderPill" title="Order anchored to the active conversation">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span id="activeOrderText">No order selected</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-icon" id="signOutBtn" aria-label="Sign out" title="Sign out">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+      <button class="btn-icon" id="openSettingsBtn" aria-label="Settings" title="API and authentication settings">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <button class="btn-icon" id="themeToggleBtn" aria-label="Toggle theme" title="Toggle light / dark theme">
+        <span id="themeIcon"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="app-main">
+
+    <!-- Left Sidebar -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <button class="btn-new-thread" id="openNewThreadBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>New Conversation</span>
+        </button>
+      </div>
+
+      <div class="sidebar-section-title">Active Conversations</div>
+      <div class="threads-scroll-area" id="threadsContainer">
+        <div class="panel-note">Loading conversations...</div>
+      </div>
+
+      <!-- Policy Documents Explorer -->
+      <div class="sidebar-docs-section">
+        <div class="sidebar-section-title" style="padding-left: 10px; padding-right: 10px;">Knowledge Base</div>
+        <div class="docs-list">
+          <div class="doc-pill" data-doc="cancellation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Cancellation Policy</span>
+          </div>
+          <div class="doc-pill" data-doc="return">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Return &amp; Refund Policy</span>
+          </div>
+          <div class="doc-pill" data-doc="shipping">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Shipping &amp; Delivery SLA</span>
+          </div>
+          <div class="doc-pill" data-doc="warranty">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Warranty &amp; Support</span>
+          </div>
+          <div class="doc-pill" data-doc="escalation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Escalation Guidelines</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Chat Area -->
+    <main class="chat-workspace">
+      <div class="chat-messages-container" id="chatMessages">
+
+        <!-- Empty State Display -->
+        <div class="chat-empty-state" id="emptyStateContainer">
+          <div class="empty-hero-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <div class="empty-title">Enterprise Order Support</div>
+          <p class="empty-desc">
+            Ask about order details, tracking status, shipping policies, returns, or warranty terms. The assistant runs real-time database queries and policy compliance checks.
+          </p>
+
+          <div class="suggestion-chips">
+            <button class="chip-btn" data-query="Where is my shipment currently, and what is the expected delivery date?">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <span>Where is my shipment?</span>
+            </button>
+            <button class="chip-btn" data-query="What is the return and refund policy for my order? Am I within the eligible window?">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+              <span>Check return eligibility</span>
+            </button>
+            <button class="chip-btn" data-query="Can I cancel or modify my order before it ships?">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              <span>Order cancellation rules</span>
+            </button>
+            <button class="chip-btn" data-query="I would like to escalate this issue and speak to a human customer support specialist.">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+              <span>Connect with a human agent</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Chat Input Console -->
+      <div class="chat-input-area">
+        <div class="input-form-wrapper">
+          <div class="input-box-container">
+            <textarea id="userQueryInput" rows="1" placeholder="Type your order inquiry or policy question..."></textarea>
+            <button class="btn-send" id="sendBtn" aria-label="Send message" title="Send message">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            </button>
+          </div>
+          <div class="input-hints">
+            <span><kbd>Enter</kbd> to send &middot; <kbd>Shift</kbd>+<kbd>Enter</kbd> for a new line</span>
+            <span id="threadMetaNotice">No active conversation</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Modal: Create New Thread -->
+  <div class="modal-overlay" id="newThreadModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Start New Support Thread</div>
+        <button class="btn-icon" id="closeNewThreadModalBtn" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Each conversation is securely anchored to an order in your account. Enter your order number or select one of your recent orders below.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="newOrderNumberInput">Order Number or Order UUID</label>
+          <input type="text" class="form-input" id="newOrderNumberInput" placeholder="e.g. 100002" autocomplete="off" />
+          <span class="form-help">Enter a 6-digit order number or the full order UUID.</span>
+        </div>
+
+        <div class="form-group" id="recentOrdersSelectorGroup">
+          <label class="form-label">Recent Orders</label>
+          <div id="customerOrdersPills" style="display:flex; flex-wrap:wrap; gap:8px;">
+            <span class="panel-note-inline">Loading your orders...</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancelNewThreadBtn">Cancel</button>
+        <button class="btn-primary" id="confirmCreateThreadBtn">Create Thread</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Settings / JWT Auth -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">API &amp; Authentication</div>
+        <button class="btn-icon" id="closeSettingsModalBtn" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="apiBaseUrlInput">Backend API Base URL</label>
+          <input type="text" class="form-input" id="apiBaseUrlInput" value="" placeholder="http://localhost:8000" autocomplete="off" />
+          <span class="form-help">Leave blank to use the current origin.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="jwtTokenInput">Access Token (Bearer JWT)</label>
+          <input type="password" class="form-input" id="jwtTokenInput" placeholder="eyJhbGciOiJIUzI1NiIsIn..." autocomplete="off" />
+          <span class="form-help">Sent as <code>Authorization: Bearer &lt;token&gt;</code> to authenticate orders and threads.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="userIdInput">Customer User ID</label>
+          <input type="text" class="form-input" id="userIdInput" value="c03cb52d-16ac-485f-a332-7f032b925fc6" placeholder="c03cb52d-16ac-485f-a332-7f032b925fc6" autocomplete="off" />
+          <span class="form-help">Default seeded test customer UUID used for database orders.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancelSettingsBtn">Cancel</button>
+        <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Policy Viewer -->
+  <div class="modal-overlay" id="policyModal">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <div class="modal-title" id="policyModalTitle">Policy Document</div>
+        <button class="btn-icon" id="closePolicyModalBtn" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="policyModalBody"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="closePolicyModalBtn2">Close</button>
+        <button class="btn-primary" id="askPolicyInChatBtn">Ask In Chat</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+<script>
+    // State management
+    const state = {
+      apiBase: localStorage.getItem("orderbot_api_base") || window.location.origin,
+      jwtToken: localStorage.getItem("orderbot_jwt_token") || "",
+      userId: localStorage.getItem("orderbot_user_id") || "c03cb52d-16ac-485f-a332-7f032b925fc6",
+      theme: localStorage.getItem("orderbot_theme") || "dark",
+      currentThreadId: localStorage.getItem("orderbot_thread_id") || null,
+      currentOrderId: null,
+      currentOrderNumber: null,
+      threads: [],
+      customerOrders: [],
+      isStreaming: false,
+      authMode: "signin",
+      session: null,
+      appInitialized: false,
+    };
+
+    try {
+      state.session = JSON.parse(localStorage.getItem("orderbot_session") || "null");
+    } catch (e) {
+      state.session = null;
+    }
+    if (state.session && state.session.access_token) {
+      state.jwtToken = state.session.access_token;
+    }
+
+    // Icon library (inline SVG, currentColor)
+    const ICONS = {
+      sun: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>',
+      moon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
+      user: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+      bot: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>',
+      check: '<svg class="tool-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+      alert: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      toastInfo: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>',
+      toastError: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    };
+
+    // DOM Elements
+    const elements = {
+      html: document.documentElement,
+      themeToggleBtn: document.getElementById("themeToggleBtn"),
+      themeIcon: document.getElementById("themeIcon"),
+      healthStatusPill: document.getElementById("healthStatusPill"),
+      healthStatusDot: document.getElementById("healthStatusDot"),
+      healthStatusText: document.getElementById("healthStatusText"),
+      activeOrderPill: document.getElementById("activeOrderPill"),
+      activeOrderText: document.getElementById("activeOrderText"),
+      openSettingsBtn: document.getElementById("openSettingsBtn"),
+      settingsModal: document.getElementById("settingsModal"),
+      closeSettingsModalBtn: document.getElementById("closeSettingsModalBtn"),
+      cancelSettingsBtn: document.getElementById("cancelSettingsBtn"),
+      saveSettingsBtn: document.getElementById("saveSettingsBtn"),
+      apiBaseUrlInput: document.getElementById("apiBaseUrlInput"),
+      jwtTokenInput: document.getElementById("jwtTokenInput"),
+      userIdInput: document.getElementById("userIdInput"),
+      openNewThreadBtn: document.getElementById("openNewThreadBtn"),
+      newThreadModal: document.getElementById("newThreadModal"),
+      closeNewThreadModalBtn: document.getElementById("closeNewThreadModalBtn"),
+      cancelNewThreadBtn: document.getElementById("cancelNewThreadBtn"),
+      confirmCreateThreadBtn: document.getElementById("confirmCreateThreadBtn"),
+      newOrderNumberInput: document.getElementById("newOrderNumberInput"),
+      customerOrdersPills: document.getElementById("customerOrdersPills"),
+      threadsContainer: document.getElementById("threadsContainer"),
+      chatMessages: document.getElementById("chatMessages"),
+      emptyStateContainer: document.getElementById("emptyStateContainer"),
+      userQueryInput: document.getElementById("userQueryInput"),
+      sendBtn: document.getElementById("sendBtn"),
+      threadMetaNotice: document.getElementById("threadMetaNotice"),
+      sidebarToggleBtn: document.getElementById("sidebarToggleBtn"),
+      appSidebar: document.getElementById("appSidebar"),
+      policyModal: document.getElementById("policyModal"),
+      policyModalTitle: document.getElementById("policyModalTitle"),
+      policyModalBody: document.getElementById("policyModalBody"),
+      closePolicyModalBtn: document.getElementById("closePolicyModalBtn"),
+      closePolicyModalBtn2: document.getElementById("closePolicyModalBtn2"),
+      askPolicyInChatBtn: document.getElementById("askPolicyInChatBtn"),
+      toastContainer: document.getElementById("toastContainer"),
+      signOutBtn: document.getElementById("signOutBtn"),
+      authScreen: document.getElementById("authScreen"),
+      authTabs: document.getElementById("authTabs"),
+      authForm: document.getElementById("authForm"),
+      authNameGroup: document.getElementById("authNameGroup"),
+      authNameInput: document.getElementById("authNameInput"),
+      authEmailInput: document.getElementById("authEmailInput"),
+      authPasswordInput: document.getElementById("authPasswordInput"),
+      authError: document.getElementById("authError"),
+      authSubmitBtn: document.getElementById("authSubmitBtn"),
+      authFooterNote: document.getElementById("authFooterNote"),
+      authVerifyPanel: document.getElementById("authVerifyPanel"),
+      authVerifyText: document.getElementById("authVerifyText"),
+      authResendBtn: document.getElementById("authResendBtn"),
+      authBackToSigninBtn: document.getElementById("authBackToSigninBtn"),
+    };
+
+    // Toast Notifications
+    function showToast(message, type = "info") {
+      const toast = document.createElement("div");
+      toast.className = "toast" + (type === "error" ? " error" : "");
+      toast.innerHTML = (type === "error" ? ICONS.toastError : ICONS.toastInfo) + "<span></span>";
+      toast.querySelector("span").textContent = message;
+      elements.toastContainer.appendChild(toast);
+      setTimeout(() => {
+        toast.style.transition = "opacity 0.2s ease";
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 220);
+      }, 3600);
+    }
+
+    // Theme Management
+    function applyTheme(theme) {
+      state.theme = theme;
+      elements.html.setAttribute("data-theme", theme);
+      elements.themeIcon.innerHTML = theme === "dark" ? ICONS.sun : ICONS.moon;
+      localStorage.setItem("orderbot_theme", theme);
+    }
+
+    elements.themeToggleBtn.addEventListener("click", () => {
+      applyTheme(state.theme === "dark" ? "light" : "dark");
+    });
+    applyTheme(state.theme);
+
+    // Sidebar Mobile Toggle
+    elements.sidebarToggleBtn.addEventListener("click", () => {
+      elements.appSidebar.classList.toggle("open");
+    });
+
+    // Helper: Headers with Bearer Auth
+    function getAuthHeaders(includeJson = true) {
+      const headers = {};
+      if (includeJson) {
+        headers["Content-Type"] = "application/json";
+      }
+      if (state.jwtToken && state.jwtToken.trim()) {
+        headers["Authorization"] = `Bearer ${state.jwtToken.trim()}`;
+      }
+      return headers;
+    }
+
+    // Health Poller
+    async function checkHealth() {
+      try {
+        const res = await fetch(`${state.apiBase}/health`);
+        if (res.ok) {
+          const data = await res.json();
+          elements.healthStatusDot.className = "status-dot online";
+          elements.healthStatusText.textContent = data.vector_store_connected
+            ? `Online — Vector RAG Active (${Math.round(data.uptime_seconds)}s)`
+            : `Online (${Math.round(data.uptime_seconds)}s)`;
+        } else {
+          elements.healthStatusDot.className = "status-dot offline";
+          elements.healthStatusText.textContent = `Server Status: ${res.status}`;
+        }
+      } catch (err) {
+        elements.healthStatusDot.className = "status-dot offline";
+        elements.healthStatusText.textContent = "Offline — Connection Error";
+      }
+    }
+    setInterval(checkHealth, 30000);
+    checkHealth();
+
+    // Settings Modal
+    elements.openSettingsBtn.addEventListener("click", () => {
+      elements.apiBaseUrlInput.value = state.apiBase;
+      elements.jwtTokenInput.value = state.jwtToken;
+      elements.userIdInput.value = state.userId;
+      elements.settingsModal.classList.add("open");
+    });
+
+    function closeSettingsModal() {
+      elements.settingsModal.classList.remove("open");
+    }
+    elements.closeSettingsModalBtn.addEventListener("click", closeSettingsModal);
+    elements.cancelSettingsBtn.addEventListener("click", closeSettingsModal);
+
+    elements.saveSettingsBtn.addEventListener("click", () => {
+      state.apiBase = elements.apiBaseUrlInput.value.trim() || window.location.origin;
+      state.jwtToken = elements.jwtTokenInput.value.trim()
+        || (state.session && state.session.access_token ? state.session.access_token : "");
+      state.userId = elements.userIdInput.value.trim() || "c03cb52d-16ac-485f-a332-7f032b925fc6";
+      localStorage.setItem("orderbot_api_base", state.apiBase);
+      localStorage.setItem("orderbot_jwt_token", state.jwtToken);
+      localStorage.setItem("orderbot_user_id", state.userId);
+      closeSettingsModal();
+      showToast("Settings saved.");
+      checkHealth();
+      loadUserOrders();
+      loadUserThreads();
+    });
+
+    // Load Authenticated User Orders
+    async function loadUserOrders() {
+      if (!(await ensureValidSession())) return;
+      try {
+        const res = await fetch(`${state.apiBase}/orders/my`, {
+          headers: getAuthHeaders(false),
+        });
+        if (res.ok) {
+          state.customerOrders = await res.json();
+          renderCustomerOrderPills();
+          return;
+        }
+        state.customerOrders = [];
+        elements.customerOrdersPills.innerHTML = `
+          <span class="panel-note-inline">
+            ${res.status === 401 || res.status === 403
+              ? "Authenticate to view your orders — add an access token in Settings."
+              : `Could not load orders (error ${res.status}). Enter an order number manually.`}
+          </span>
+        `;
+      } catch (e) {
+        console.warn("Could not load customer orders:", e);
+        state.customerOrders = [];
+        elements.customerOrdersPills.innerHTML = `
+          <span class="panel-note-inline">Could not reach the server. Enter an order number manually.</span>
+        `;
+      }
+    }
+
+    function renderCustomerOrderPills() {
+      if (!state.customerOrders || state.customerOrders.length === 0) {
+        elements.customerOrdersPills.innerHTML = `
+          <span class="panel-note-inline">
+            No orders found for this account. Enter an order number manually.
+          </span>
+        `;
+        return;
+      }
+      elements.customerOrdersPills.innerHTML = state.customerOrders.map(o => `
+        <button class="order-select-chip" type="button" onclick="selectOrderForNewThread(${o.order_number})">
+          <span class="order-select-num">#${o.order_number}</span>
+          <span class="order-select-status">${escapeHtml(o.status)}</span>
+        </button>
+      `).join("");
+    }
+
+    window.selectOrderForNewThread = function(orderNum) {
+      elements.newOrderNumberInput.value = orderNum;
+    };
+
+    // Load User Conversation Threads
+    async function loadUserThreads() {
+      if (!(await ensureValidSession())) return;
+      try {
+        const res = await fetch(`${state.apiBase}/chat/threads`, {
+          headers: getAuthHeaders(false),
+        });
+        if (res.ok) {
+          state.threads = await res.json();
+          renderThreadsList();
+          if (state.threads.length > 0 && !state.currentThreadId) {
+            selectThread(state.threads[0].thread_id);
+          }
+        } else {
+          elements.threadsContainer.innerHTML = `
+            <div class="panel-note">Authenticate to view your conversations.</div>
+          `;
+        }
+      } catch (err) {
+        console.warn("Failed to load threads:", err);
+      }
+    }
+
+    function renderThreadsList() {
+      if (!state.threads || state.threads.length === 0) {
+        elements.threadsContainer.innerHTML = `
+          <div class="panel-note">
+            No conversations yet.<br>Click <strong>New Conversation</strong> to start.
+          </div>
+        `;
+        return;
+      }
+
+      elements.threadsContainer.innerHTML = state.threads.map(t => {
+        const isActive = t.thread_id === state.currentThreadId;
+        const orderDisplay = t.order_number ? `#${t.order_number}` : (t.order_id ? t.order_id.slice(0, 8) : "General");
+        const preview = t.last_preview || "New conversation";
+        const timeStr = t.updated_at ? new Date(t.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "";
+
+        return `
+          <div class="thread-item ${isActive ? 'active' : ''}" onclick="selectThread('${t.thread_id}')">
+            <div class="thread-item-top">
+              <span class="thread-order-tag">Order ${orderDisplay}</span>
+              <span class="thread-time">${timeStr}</span>
+            </div>
+            <div class="thread-preview">${escapeHtml(preview)}</div>
+            ${t.is_completed ? `<span class="thread-status-badge escalated">Escalated / Closed</span>` : ''}
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Select Active Thread & Load History
+    window.selectThread = async function(threadId) {
+      state.currentThreadId = threadId;
+      localStorage.setItem("orderbot_thread_id", threadId);
+      elements.appSidebar.classList.remove("open");
+      renderThreadsList();
+
+      const matchedThread = state.threads.find(t => t.thread_id === threadId);
+      if (matchedThread) {
+        state.currentOrderId = matchedThread.order_id;
+        state.currentOrderNumber = matchedThread.order_number;
+        updateActiveOrderDisplay();
+      }
+
+      await loadThreadHistory(threadId);
+    };
+
+    function updateActiveOrderDisplay() {
+      if (state.currentOrderNumber) {
+        elements.activeOrderText.textContent = `Order #${state.currentOrderNumber}`;
+        elements.threadMetaNotice.textContent = `Thread active — anchored to Order #${state.currentOrderNumber}`;
+      } else if (state.currentOrderId) {
+        elements.activeOrderText.textContent = `Order ${state.currentOrderId.slice(0, 8)}...`;
+        elements.threadMetaNotice.textContent = `Thread active — anchored to Order ${state.currentOrderId.slice(0, 8)}`;
+      } else {
+        elements.activeOrderText.textContent = "No order selected";
+        elements.threadMetaNotice.textContent = "Select or create an order thread";
+      }
+    }
+
+    // Load History for Thread
+    async function loadThreadHistory(threadId) {
+      if (!(await ensureValidSession())) return;
+      elements.chatMessages.innerHTML = `
+        <div class="chat-loading">Loading conversation history...</div>
+      `;
+
+      try {
+        const res = await fetch(`${state.apiBase}/chat/${threadId}/history`, {
+          headers: getAuthHeaders(false),
+        });
+
+        if (!res.ok) {
+          elements.chatMessages.innerHTML = `
+            <div class="chat-error">Failed to load history for this thread (${res.status}).</div>
+          `;
+          return;
+        }
+
+        const data = await res.json();
+        state.currentOrderId = data.order_id || state.currentOrderId;
+        updateActiveOrderDisplay();
+
+        const messages = data.messages || [];
+        if (messages.length === 0) {
+          elements.chatMessages.innerHTML = "";
+          elements.chatMessages.appendChild(elements.emptyStateContainer);
+          elements.emptyStateContainer.style.display = "flex";
+          return;
+        }
+
+        elements.chatMessages.innerHTML = "";
+        messages.forEach(msg => {
+          const type = msg.type;
+          const content = msg.data?.content || "";
+          if (type === "human") {
+            appendUserMessage(content, false);
+          } else if (type === "ai") {
+            appendAssistantMessage(content, false);
+          }
+        });
+
+        if (data.is_completed) {
+          renderEscalationBanner("This thread has been escalated to human support and is closed for automated responses.");
+        }
+
+        scrollToBottom();
+      } catch (err) {
+        console.error("Error loading history:", err);
+      }
+    }
+
+    // New Thread Modal
+    elements.openNewThreadBtn.addEventListener("click", () => {
+      elements.newOrderNumberInput.value = "";
+      elements.newThreadModal.classList.add("open");
+      loadUserOrders();
+    });
+
+    function closeNewThreadModal() {
+      elements.newThreadModal.classList.remove("open");
+    }
+    elements.closeNewThreadModalBtn.addEventListener("click", closeNewThreadModal);
+    elements.cancelNewThreadBtn.addEventListener("click", closeNewThreadModal);
+
+    elements.confirmCreateThreadBtn.addEventListener("click", async () => {
+      const val = elements.newOrderNumberInput.value.trim();
+      if (!val) {
+        showToast("Enter an order number or order UUID.", "error");
+        return;
+      }
+
+      if (!(await ensureValidSession())) return;
+
+      elements.confirmCreateThreadBtn.disabled = true;
+      elements.confirmCreateThreadBtn.textContent = "Creating...";
+
+      const isDigits = /^\d+$/.test(val);
+      const payload = isDigits ? { order_number: parseInt(val, 10) } : { order_id: val };
+
+      try {
+        const res = await fetch(`${state.apiBase}/chat/create_thread`, {
+          method: "POST",
+          headers: getAuthHeaders(true),
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          showToast(`Error creating thread: ${errData.detail || res.statusText}`, "error");
+          return;
+        }
+
+        const threadData = await res.json();
+        closeNewThreadModal();
+        await loadUserThreads();
+        selectThread(threadData.thread_id);
+      } catch (err) {
+        showToast(`Failed to create thread: ${err.message}`, "error");
+      } finally {
+        elements.confirmCreateThreadBtn.disabled = false;
+        elements.confirmCreateThreadBtn.textContent = "Create Thread";
+      }
+    });
+
+    // Chat Message Rendering
+    function appendUserMessage(text, scroll = true) {
+      if (elements.emptyStateContainer) {
+        elements.emptyStateContainer.style.display = "none";
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "msg-wrapper user";
+      wrapper.innerHTML = `
+        <div class="msg-avatar user">${ICONS.user}</div>
+        <div class="msg-content-box">
+          <div class="msg-bubble">${escapeHtml(text)}</div>
+          <span class="msg-meta">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+      `;
+      elements.chatMessages.appendChild(wrapper);
+      if (scroll) scrollToBottom();
+    }
+
+    function createAssistantMessageBubble() {
+      if (elements.emptyStateContainer) {
+        elements.emptyStateContainer.style.display = "none";
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "msg-wrapper bot";
+      wrapper.innerHTML = `
+        <div class="msg-avatar bot">${ICONS.bot}</div>
+        <div class="msg-content-box">
+          <div class="tool-container"></div>
+          <div class="msg-bubble typing-cursor"></div>
+          <span class="msg-meta">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+      `;
+      elements.chatMessages.appendChild(wrapper);
+      scrollToBottom();
+      return {
+        wrapper,
+        bubble: wrapper.querySelector(".msg-bubble"),
+        toolContainer: wrapper.querySelector(".tool-container"),
+      };
+    }
+
+    function appendAssistantMessage(text, scroll = true) {
+      if (elements.emptyStateContainer) {
+        elements.emptyStateContainer.style.display = "none";
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "msg-wrapper bot";
+      wrapper.innerHTML = `
+        <div class="msg-avatar bot">${ICONS.bot}</div>
+        <div class="msg-content-box">
+          <div class="msg-bubble">${renderMarkdown(text)}</div>
+          <span class="msg-meta">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+      `;
+      elements.chatMessages.appendChild(wrapper);
+      if (scroll) scrollToBottom();
+    }
+
+    function renderEscalationBanner(reason) {
+      const banner = document.createElement("div");
+      banner.className = "escalation-banner";
+      banner.innerHTML = `
+        <div class="escalation-icon">${ICONS.alert}</div>
+        <div class="escalation-body">
+          <h4>Escalated to Human Support</h4>
+          <p>${escapeHtml(reason || "Ticket opened for human specialist assistance. Automated replies are paused.")}</p>
+        </div>
+      `;
+      elements.chatMessages.appendChild(banner);
+      scrollToBottom();
+    }
+
+    // Real-Time SSE Chat Streaming
+    async function sendMessage(query) {
+      if (!query || !query.trim() || state.isStreaming) return;
+      if (!(await ensureValidSession())) return;
+
+      if (!state.currentThreadId) {
+        if (state.customerOrders && state.customerOrders.length > 0) {
+          elements.newOrderNumberInput.value = state.customerOrders[0].order_number;
+        }
+        showToast("Start a conversation before sending a message.");
+        elements.newThreadModal.classList.add("open");
+        return;
+      }
+
+      appendUserMessage(query);
+      elements.userQueryInput.value = "";
+      autoResizeTextarea();
+
+      state.isStreaming = true;
+      elements.sendBtn.disabled = true;
+
+      const { bubble, toolContainer } = createAssistantMessageBubble();
+      let accumulatedText = "";
+
+      try {
+        const response = await fetch(`${state.apiBase}/chat/${state.currentThreadId}`, {
+          method: "POST",
+          headers: getAuthHeaders(true),
+          body: JSON.stringify({ query }),
+        });
+
+        if (!response.ok) {
+          const errJson = await response.json().catch(() => ({}));
+          bubble.classList.remove("typing-cursor");
+          bubble.innerHTML = `<div class="msg-error">Error: ${escapeHtml(errJson.detail || response.statusText)}</div>`;
+          state.isStreaming = false;
+          elements.sendBtn.disabled = false;
+          return;
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n\n");
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data:")) continue;
+
+            const jsonStr = trimmed.replace(/^data:\s*/, "");
+            try {
+              const event = JSON.parse(jsonStr);
+
+              if (event.type === "token") {
+                accumulatedText += event.content || "";
+                bubble.innerHTML = renderMarkdown(accumulatedText);
+                scrollToBottom();
+              } else if (event.type === "tool_call") {
+                renderToolCallCard(toolContainer, event.name, event.args);
+                scrollToBottom();
+              } else if (event.type === "tool_result") {
+                updateToolResultCard(toolContainer, event.name, event.result);
+                scrollToBottom();
+              } else if (event.type === "escalation") {
+                renderEscalationBanner(event.reason);
+              } else if (event.type === "error") {
+                bubble.innerHTML += `<div class="msg-error" style="margin-top:8px;">${escapeHtml(event.detail || "Unknown error")}</div>`;
+              } else if (event.type === "done") {
+                bubble.classList.remove("typing-cursor");
+                bubble.innerHTML = renderMarkdown(accumulatedText);
+                loadUserThreads();
+              }
+            } catch (err) {
+              console.warn("Failed parsing SSE event:", err, jsonStr);
+            }
+          }
+        }
+      } catch (err) {
+        bubble.classList.remove("typing-cursor");
+        bubble.innerHTML = `<div class="msg-error">Connection error: ${escapeHtml(err.message)}</div>`;
+      } finally {
+        bubble.classList.remove("typing-cursor");
+        state.isStreaming = false;
+        elements.sendBtn.disabled = false;
+        scrollToBottom();
+      }
+    }
+
+    function renderToolCallCard(container, toolName, args) {
+      const card = document.createElement("div");
+      card.className = "tool-execution-card";
+      card.setAttribute("data-tool", toolName);
+
+      let toolDisplayName = "Checking Order Database";
+      if (toolName === "search_order_policies") toolDisplayName = "Searching Policy Knowledge Base";
+      if (toolName === "escalate_to_human") toolDisplayName = "Escalating to Human Support";
+
+      card.innerHTML = `
+        <div class="tool-header" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+          <div class="tool-badge">
+            <span class="tool-spinner"></span>
+            <span>${toolDisplayName}</span>
+          </div>
+          <div class="tool-status-wrap">
+            <span class="tool-status">Executing</span>
+            <svg class="tool-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="tool-details">${escapeHtml(JSON.stringify(args, null, 2))}</div>
+      `;
+      container.appendChild(card);
+    }
+
+    function updateToolResultCard(container, toolName, resultStr) {
+      const cards = container.querySelectorAll(`[data-tool="${toolName}"]`);
+      if (cards.length === 0) return;
+      const lastCard = cards[cards.length - 1];
+
+      const spinner = lastCard.querySelector(".tool-spinner");
+      if (spinner) {
+        spinner.outerHTML = ICONS.check;
+      }
+
+      const statusEl = lastCard.querySelector(".tool-status");
+      if (statusEl) {
+        statusEl.textContent = "Completed";
+        statusEl.classList.add("done");
+      }
+
+      const details = lastCard.querySelector(".tool-details");
+      if (details) {
+        try {
+          const parsed = JSON.parse(resultStr);
+          details.innerHTML = escapeHtml(JSON.stringify(parsed, null, 2));
+        } catch (_) {
+          details.textContent = resultStr;
+        }
+      }
+    }
+
+    // Scroll Helper
+    function scrollToBottom() {
+      elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+    }
+
+    // Textarea Auto Resize
+    function autoResizeTextarea() {
+      elements.userQueryInput.style.height = "auto";
+      elements.userQueryInput.style.height = Math.min(elements.userQueryInput.scrollHeight, 180) + "px";
+    }
+
+    elements.userQueryInput.addEventListener("input", autoResizeTextarea);
+    elements.userQueryInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage(elements.userQueryInput.value);
+      }
+    });
+
+    elements.sendBtn.addEventListener("click", () => {
+      sendMessage(elements.userQueryInput.value);
+    });
+
+    // Suggestion Chips
+    document.querySelectorAll(".chip-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const query = btn.getAttribute("data-query");
+        sendMessage(query);
+      });
+    });
+
+    // Policy Modal Content
+    const policyDetails = {
+      cancellation: {
+        title: "Cancellation & Order Modification Policy",
+        content: `
+          <p><strong>Window for Cancellation:</strong> Within 2 hours of placement, orders in <code>pending</code> or <code>processing</code> status can be cancelled self-service for a 100% full refund with zero fees.</p>
+          <p><strong>Shipped Orders:</strong> Once an order transitions to <code>shipped</code> or <code>in_transit</code>, cancellation is no longer possible. Customers must initiate a return post-delivery.</p>
+          <p><strong>Address Updates:</strong> Permitted strictly prior to shipment dispatch.</p>
+        `,
+        prompt: "Can I still cancel or modify my order?",
+      },
+      return: {
+        title: "Return & Refund Policy",
+        content: `
+          <p><strong>Return Window:</strong> 30 calendar days from the date of confirmed package delivery.</p>
+          <p><strong>Eligible Condition:</strong> Unopened, pristine condition with all accessories, original tags, and packaging intact.</p>
+          <p><strong>Exceptions:</strong> Final sale items, customized gear, and opened consumable goods are non-returnable.</p>
+          <p><strong>Restocking & Shipping:</strong> A standard $5.99 return shipping label fee applies unless the item is defective.</p>
+        `,
+        prompt: "What is the return window and restocking fee for my order items?",
+      },
+      shipping: {
+        title: "Shipping & Delivery Service Level Agreements (SLA)",
+        content: `
+          <p><strong>Standard Ground:</strong> 3 to 5 business days delivery across all domestic locations.</p>
+          <p><strong>Expedited Priority:</strong> 2 business days guaranteed via FedEx / UPS Priority.</p>
+          <p><strong>Next-Day Overnight:</strong> Delivered by 3:00 PM next business day when placed before 1:00 PM EST.</p>
+          <p><strong>Tracking:</strong> Live carrier tracking numbers are activated within 24 hours of dispatch.</p>
+        `,
+        prompt: "What carrier is my order using and what is the expected delivery SLA?",
+      },
+      warranty: {
+        title: "Product Warranty & Support Matrix",
+        content: `
+          <p><strong>Standard 1-Year Hardware Warranty:</strong> Covers all manufacturer defects in materials, assembly, and components.</p>
+          <p><strong>Extended 2-Year Support:</strong> Includes free priority RMA advance replacement and hardware repair coverage.</p>
+          <p><strong>Exclusions:</strong> Water submersion, physical drops, and unauthorized third-party modifications.</p>
+        `,
+        prompt: "What warranty coverage and support terms apply to my purchased products?",
+      },
+      escalation: {
+        title: "Customer Support Escalation Guidelines",
+        content: `
+          <p><strong>Tier-1 Automated Bot Scope:</strong> Real-time tracking, return eligibility calculations, policy explanations, address guidance.</p>
+          <p><strong>Tier-2 Human Escalation Triggers:</strong> High-value claims (>$500), reported package theft/loss, consecutive failed delivery attempts, damaged goods on arrival, or upon explicit customer request.</p>
+        `,
+        prompt: "I want to escalate my issue to a human support specialist.",
+      },
+    };
+
+    let activePolicyPrompt = "";
+    document.querySelectorAll(".doc-pill").forEach(pill => {
+      pill.addEventListener("click", () => {
+        const docKey = pill.getAttribute("data-doc");
+        const doc = policyDetails[docKey];
+        if (!doc) return;
+
+        elements.policyModalTitle.textContent = doc.title;
+        elements.policyModalBody.innerHTML = doc.content;
+        activePolicyPrompt = doc.prompt;
+        elements.policyModal.classList.add("open");
+      });
+    });
+
+    function closePolicyModal() {
+      elements.policyModal.classList.remove("open");
+    }
+    elements.closePolicyModalBtn.addEventListener("click", closePolicyModal);
+    elements.closePolicyModalBtn2.addEventListener("click", closePolicyModal);
+
+    elements.askPolicyInChatBtn.addEventListener("click", () => {
+      closePolicyModal();
+      if (activePolicyPrompt) {
+        sendMessage(activePolicyPrompt);
+      }
+    });
+
+    // Close modals on overlay click / Escape
+    document.querySelectorAll(".modal-overlay").forEach(overlay => {
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) overlay.classList.remove("open");
+      });
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".modal-overlay.open").forEach(m => m.classList.remove("open"));
+      }
+    });
+
+    // Simple Markdown & HTML Helpers
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function renderMarkdown(md) {
+      if (!md) return "";
+      let html = escapeHtml(md);
+
+      // Code blocks
+      html = html.replace(/```([a-z]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+        return `<pre><code>${code}</code></pre>`;
+      });
+
+      // Inline code
+      html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+      // Bold & Italic
+      html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+      html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+      // Tables
+      html = html.replace(/\n\|(.+)\|\n\|[-:\s|]+\|\n((\|.+\|\n?)+)/g, (match, header, body) => {
+        const ths = header.split("|").map(h => h.trim()).filter(Boolean).map(h => `<th>${h}</th>`).join("");
+        const rows = body.trim().split("\n").map(r => {
+          const tds = r.split("|").map(c => c.trim()).filter(Boolean).map(c => `<td>${c}</td>`).join("");
+          return `<tr>${tds}</tr>`;
+        }).join("");
+        return `<table><thead><tr>${ths}</tr></thead><tbody>${rows}</tbody></table>`;
+      });
+
+      // Bullet lists
+      html = html.replace(/^\s*[-*]\s+(.+)$/gm, "<li>$1</li>");
+      html = html.replace(/(<li>.+<\/li>\n?)+/g, "<ul>$&</ul>");
+
+      // Numbered lists
+      html = html.replace(/^\s*\d+\.\s+(.+)$/gm, "<li>$1</li>");
+
+      // Paragraph line breaks
+      html = html.replace(/\n\n+/g, "<br/><br/>");
+      html = html.replace(/\n/g, "<br/>");
+
+      return html;
+    }
+
+    /* ============ Authentication (Supabase Auth) ============ */
+
+    function saveSessionFromAuth(data) {
+      const expiresAt = data.expires_at
+        || (data.expires_in ? Math.floor(Date.now() / 1000) + Number(data.expires_in) : null);
+      state.session = {
+        access_token: data.access_token,
+        refresh_token: data.refresh_token || (state.session && state.session.refresh_token) || "",
+        expires_at: expiresAt,
+        email: (data.user && data.user.email) || (state.session && state.session.email) || "",
+        user_id: (data.user && data.user.id) || (state.session && state.session.user_id) || "",
+      };
+      state.jwtToken = state.session.access_token;
+      localStorage.setItem("orderbot_session", JSON.stringify(state.session));
+      localStorage.setItem("orderbot_jwt_token", state.jwtToken);
+    }
+
+    function clearSessionState() {
+      state.session = null;
+      state.jwtToken = "";
+      state.currentThreadId = null;
+      state.currentOrderId = null;
+      state.currentOrderNumber = null;
+      state.threads = [];
+      state.customerOrders = [];
+      state.appInitialized = false;
+      localStorage.removeItem("orderbot_session");
+      localStorage.removeItem("orderbot_jwt_token");
+      localStorage.removeItem("orderbot_thread_id");
+    }
+
+    function showAuthError(message) {
+      elements.authError.textContent = message;
+      elements.authError.style.display = "block";
+    }
+
+    function hideAuthError() {
+      elements.authError.textContent = "";
+      elements.authError.style.display = "none";
+    }
+
+    function showAuthScreen(message) {
+      document.body.classList.remove("authed");
+      elements.authVerifyPanel.style.display = "none";
+      elements.authForm.style.display = "flex";
+      if (message) {
+        showAuthError(message);
+      } else {
+        hideAuthError();
+      }
+    }
+
+    function enterApp() {
+      document.body.classList.add("authed");
+      if (state.session && state.session.email) {
+        elements.signOutBtn.title = `Sign out (${state.session.email})`;
+      }
+      if (!state.appInitialized) {
+        state.appInitialized = true;
+        loadUserOrders();
+        loadUserThreads();
+      }
+    }
+
+    async function apiPostAuth(path, body) {
+      const res = await fetch(`${state.apiBase}${path}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const detail = data.detail;
+        const isStructured = detail && typeof detail === "object";
+        const err = new Error(
+          isStructured ? (detail.message || detail.code) : (detail || `Request failed (${res.status}).`)
+        );
+        err.code = isStructured ? detail.code : null;
+        throw err;
+      }
+      return data;
+    }
+
+    async function fetchAccountProfile() {
+      if (!state.session || !state.session.access_token || state.session.email) return;
+      try {
+        const res = await fetch(`${state.apiBase}/auth/me`, { headers: getAuthHeaders(false) });
+        if (!res.ok) return;
+        const me = await res.json();
+        if (me && me.email) {
+          state.session.email = me.email;
+          state.session.user_id = me.id || state.session.user_id;
+          localStorage.setItem("orderbot_session", JSON.stringify(state.session));
+          elements.signOutBtn.title = `Sign out (${me.email})`;
+        }
+      } catch (e) {
+        console.warn("Could not fetch account profile:", e);
+      }
+    }
+
+    async function refreshSession() {
+      if (!state.session || !state.session.refresh_token) throw new Error("No refresh token available.");
+      const data = await apiPostAuth("/auth/refresh", { refresh_token: state.session.refresh_token });
+      if (!data.session) throw new Error("Session refresh failed.");
+      saveSessionFromAuth(data.session);
+    }
+
+    async function ensureValidSession() {
+      if (!state.session || !state.session.access_token) return true;
+      const now = Math.floor(Date.now() / 1000);
+      if (state.session.expires_at && now >= state.session.expires_at - 90) {
+        try {
+          await refreshSession();
+        } catch (e) {
+          console.warn("Session refresh failed:", e);
+          clearSessionState();
+          showAuthScreen("Your session expired. Please sign in again.");
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function cleanAuthUrl() {
+      if (window.location.hash || window.location.search) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    }
+
+    async function handleAuthRedirect() {
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const queryParams = new URLSearchParams(window.location.search);
+
+      const redirectError = hashParams.get("error_description") || queryParams.get("error_description");
+      if (redirectError) {
+        cleanAuthUrl();
+        showAuthScreen(decodeURIComponent(redirectError.replace(/\+/g, " ")));
+        return false;
+      }
+
+      if (hashParams.get("access_token")) {
+        saveSessionFromAuth({
+          access_token: hashParams.get("access_token"),
+          refresh_token: hashParams.get("refresh_token"),
+          expires_in: hashParams.get("expires_in"),
+        });
+        cleanAuthUrl();
+        await fetchAccountProfile();
+        return true;
+      }
+
+      const tokenHash = queryParams.get("token_hash");
+      if (tokenHash) {
+        try {
+          const data = await apiPostAuth("/auth/verify", {
+            token_hash: tokenHash,
+            type: queryParams.get("type") || "signup",
+          });
+          if (!data.session) throw new Error("The verification link is invalid or has expired.");
+          saveSessionFromAuth(data.session);
+          cleanAuthUrl();
+          return true;
+        } catch (e) {
+          cleanAuthUrl();
+          showAuthScreen(`Email verification failed: ${e.message}`);
+          return false;
+        }
+      }
+
+      return false;
+    }
+
+    function authRedirectUrl() {
+      return `${window.location.origin}${window.location.pathname}`;
+    }
+
+    async function signUpUser(email, password, fullName) {
+      const data = await apiPostAuth("/auth/signup", {
+        email,
+        password,
+        full_name: fullName,
+        redirect_to: authRedirectUrl(),
+      });
+      if (data.session) {
+        saveSessionFromAuth(data.session);
+        return { signedIn: true };
+      }
+      return { signedIn: false };
+    }
+
+    async function signInUser(email, password) {
+      const data = await apiPostAuth("/auth/signin", { email, password });
+      if (!data.session) throw new Error("Invalid email or password.");
+      saveSessionFromAuth(data.session);
+      return { signedIn: true };
+    }
+
+    async function resendVerificationEmail(email) {
+      await apiPostAuth("/auth/resend", { email, redirect_to: authRedirectUrl() });
+    }
+
+    function setAuthMode(mode) {
+      state.authMode = mode;
+      elements.authTabs.querySelectorAll(".auth-tab").forEach(tab => {
+        tab.classList.toggle("active", tab.getAttribute("data-mode") === mode);
+      });
+      const isSignup = mode === "signup";
+      elements.authNameGroup.style.display = isSignup ? "flex" : "none";
+      elements.authPasswordInput.setAttribute("autocomplete", isSignup ? "new-password" : "current-password");
+      elements.authSubmitBtn.textContent = isSignup ? "Create Account" : "Sign In";
+      elements.authFooterNote.textContent = isSignup
+        ? "We'll email you a verification link to activate your account."
+        : "Sign in to access your orders and conversations.";
+      hideAuthError();
+    }
+
+    function showVerifyPanel(email, message) {
+      elements.authForm.style.display = "none";
+      elements.authVerifyPanel.style.display = "flex";
+      hideAuthError();
+      elements.authVerifyText.textContent = message
+        || `We sent a verification link to ${email}. Click the link in that email to activate your account — you'll land back here automatically.`;
+      elements.authResendBtn.dataset.email = email;
+    }
+
+    elements.authTabs.addEventListener("click", (e) => {
+      const tab = e.target.closest(".auth-tab");
+      if (tab) setAuthMode(tab.getAttribute("data-mode"));
+    });
+
+    elements.authBackToSigninBtn.addEventListener("click", () => {
+      elements.authVerifyPanel.style.display = "none";
+      elements.authForm.style.display = "flex";
+      setAuthMode("signin");
+    });
+
+    elements.authResendBtn.addEventListener("click", async () => {
+      const email = elements.authResendBtn.dataset.email || elements.authEmailInput.value.trim();
+      if (!email) return;
+      elements.authResendBtn.disabled = true;
+      elements.authResendBtn.textContent = "Sending...";
+      try {
+        await resendVerificationEmail(email);
+        showToast("Verification email sent. Check your inbox.");
+      } catch (err) {
+        showToast(err.message, "error");
+      } finally {
+        elements.authResendBtn.disabled = false;
+        elements.authResendBtn.textContent = "Resend verification email";
+      }
+    });
+
+    elements.authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideAuthError();
+
+      const email = elements.authEmailInput.value.trim();
+      const password = elements.authPasswordInput.value;
+      const fullName = elements.authNameInput.value.trim();
+
+      if (!email || !email.includes("@")) {
+        showAuthError("Enter a valid email address.");
+        return;
+      }
+      if (!password || password.length < 6) {
+        showAuthError("Password must be at least 6 characters.");
+        return;
+      }
+
+      elements.authSubmitBtn.disabled = true;
+      elements.authSubmitBtn.textContent = state.authMode === "signup" ? "Creating account..." : "Signing in...";
+
+      try {
+        if (state.authMode === "signup") {
+          const result = await signUpUser(email, password, fullName);
+          if (result.signedIn) {
+            enterApp();
+          } else {
+            showVerifyPanel(email);
+          }
+        } else {
+          await signInUser(email, password);
+          enterApp();
+        }
+      } catch (err) {
+        if (err.code === "email_not_confirmed") {
+          showVerifyPanel(email, `Your email (${email}) is not verified yet. Check your inbox and spam folder for the verification link, or resend it below.`);
+        } else {
+          showAuthError(err.message);
+        }
+      } finally {
+        elements.authSubmitBtn.disabled = false;
+        elements.authSubmitBtn.textContent = state.authMode === "signup" ? "Create Account" : "Sign In";
+      }
+    });
+
+    elements.signOutBtn.addEventListener("click", () => {
+      clearSessionState();
+      elements.chatMessages.innerHTML = "";
+      elements.chatMessages.appendChild(elements.emptyStateContainer);
+      elements.emptyStateContainer.style.display = "flex";
+      elements.threadsContainer.innerHTML = `<div class="panel-note">Loading conversations...</div>`;
+      elements.activeOrderText.textContent = "No order selected";
+      elements.threadMetaNotice.textContent = "No active conversation";
+      showAuthScreen();
+      showToast("Signed out.");
+    });
+
+    // Initial load sequence: handle Supabase email verification redirects, then gate on auth.
+    async function bootstrap() {
+      const redirected = await handleAuthRedirect();
+      const hasSession = !!(state.session && state.session.access_token);
+      if (redirected || hasSession || state.jwtToken) {
+        enterApp();
+        if (state.session) fetchAccountProfile();
+      } else {
+        showAuthScreen();
+      }
+    }
+
+    bootstrap();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+Metadata,Version: 1.0,Effective Date: 2026-01-01
+Topic,Customer Question,Policy Rule,Action / Resolution
+Wrong Item Delivered,I received the wrong item or wrong color.,Report within 48 hours of delivery.,Automated replacement dispatched immediately. Courier will pick up wrong item.
+Damaged Delivery,Package arrived crushed or product is broken.,Report within 48 hours with photos.,Escalate to human support for express claim review and immediate replacement.
+Delayed Shipment,My order has not arrived past estimated delivery date.,If delayed > 3 business days past SLA.,"Trigger courier priority trace. If untraced after 5 days, declare lost and re-ship or full refund."
+Payment Deducted but Order Not Placed,Bank debited my account but no order confirmation received.,Payment gateway auto-reversal within 48 hours.,Provide Transaction Reference Number (RRN). Escalated to finance reconciliation.

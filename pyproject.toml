@@ -1,0 +1,33 @@
+[project]
+name = "order-bot"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "paddleocr[doc-parser]>=3.0.0",
+    "paddlex[ocr]",
+    "paddlepaddle-gpu",
+    "langchain>=1.4.3",
+    "langchain-google-genai>=4.4.0",
+    "langchain-community>=0.4.2",
+    "pydantic>=2.13.5",
+    "pymupdf>=1.28.2",
+    "email-validator>=2.3.0",
+    "unstructured[xlsx]>=0.27.25",
+    "langchain-excel-loader>=0.1.1",
+    "langchain-text-splitters>=1.1.3",
+    "langchain-nvidia-ai-endpoints>=1.4.3",
+    "supabase>=2.32.0",
+    "python-dotenv>=1.2.4",
+    "fastapi>=0.143.0",
+    "uvicorn[standard]>=0.30.0",
+    "python-multipart>=0.0.9",
+    "faker>=40.43.0",
+]
+
+[[tool.uv.index]]
+name = "paddle-gpu"
+url = "https://www.paddlepaddle.org.cn/packages/stable/cu120/"
+explicit = true
+
+[tool.uv.sources]
+paddlepaddle-gpu = { index = "paddle-gpu" }
